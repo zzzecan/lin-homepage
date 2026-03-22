@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>法条更新与案件展示</title>
+  <title>法律专题</title>
   <style>
     :root {
       --bg: #f5f5f7;
-      --card: rgba(255,255,255,0.78);
+      --card: rgba(255,255,255,0.82);
       --text: #1d1d1f;
       --sub: #6e6e73;
       --line: rgba(0,0,0,0.08);
       --accent: #0071e3;
       --soft: #eef5ff;
+      --new: #d86f5b;
       --shadow: 0 20px 60px rgba(0,0,0,0.08);
       --radius: 28px;
       --max: 1240px;
@@ -21,136 +22,95 @@
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Helvetica Neue", sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(90,200,250,0.18), transparent 32%),
-        radial-gradient(circle at top right, rgba(0,113,227,0.10), transparent 28%),
-        var(--bg);
+      background: radial-gradient(circle at top left, rgba(90,200,250,0.18), transparent 32%), radial-gradient(circle at top right, rgba(0,113,227,0.10), transparent 28%), var(--bg);
       color: var(--text);
     }
     .wrap { max-width: var(--max); margin: 0 auto; padding: 32px 20px 80px; }
-    .hero { padding: 72px 24px 40px; text-align: center; }
-    .eyebrow {
-      display: inline-block; padding: 8px 14px; border-radius: 999px;
-      background: rgba(0,113,227,0.08); color: var(--accent); font-size: 14px; font-weight: 600;
-    }
-    h1 { margin: 18px 0 12px; font-size: clamp(36px, 6vw, 72px); line-height: 1.04; letter-spacing: -0.04em; }
-    .hero p { margin: 0 auto; max-width: 820px; font-size: clamp(17px,2.2vw,24px); line-height: 1.6; color: var(--sub); }
-    .grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 24px; margin-top: 24px; }
-    .card {
-      background: var(--card); border: 1px solid rgba(255,255,255,0.65);
-      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-      border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
-    }
+    .hero { padding: 64px 24px 36px; text-align: center; }
+    .eyebrow { display: inline-block; padding: 8px 14px; border-radius: 999px; background: rgba(0,113,227,0.08); color: var(--accent); font-size: 14px; font-weight: 600; }
+    h1 { margin: 18px 0 12px; font-size: clamp(36px, 6vw, 68px); line-height: 1.04; letter-spacing: -0.04em; }
+    .hero p { margin: 0 auto; max-width: 820px; font-size: clamp(17px,2.2vw,22px); line-height: 1.6; color: var(--sub); }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+    .card { background: var(--card); border: 1px solid rgba(255,255,255,0.65); backdrop-filter: blur(18px); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
     .section-head { padding: 28px 28px 8px; }
     .section-title { margin: 0; font-size: 30px; letter-spacing: -0.03em; }
     .section-desc { margin: 10px 0 0; color: var(--sub); font-size: 15px; line-height: 1.7; }
     .meta-bar { display:flex; flex-wrap:wrap; gap:10px; padding:0 28px 20px; }
     .pill { padding:8px 12px; border-radius:999px; background:var(--soft); color:var(--accent); font-size:13px; font-weight:600; }
     .updates { padding: 8px 20px 24px; }
-    .update-item { display:grid; grid-template-columns: 110px 1fr; gap:20px; padding:20px 8px; border-top:1px solid var(--line); }
+    .update-item { display:grid; grid-template-columns: 94px 1fr; gap:20px; padding:20px 8px; border-top:1px solid var(--line); }
     .update-item:first-child { border-top:0; }
     .date { color: var(--sub); font-size: 14px; font-weight: 600; padding-top: 4px; }
     .update-item h3 { margin:0 0 8px; font-size:20px; letter-spacing:-0.02em; }
-    .update-item p { margin:0 0 12px; color:var(--sub); line-height:1.75; font-size:15px; }
+    .update-item p { margin:0 0 8px; color:var(--sub); line-height:1.75; font-size:15px; }
     .update-item a { color:var(--accent); text-decoration:none; }
     .tag { display:inline-flex; padding:8px 12px; border-radius:999px; background:rgba(0,113,227,0.08); color:var(--accent); font-size:13px; font-weight:600; }
-    .cases-wrap { display:flex; flex-direction:column; height:100%; }
-    .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; padding:0 28px 20px; }
-    .stat { background:rgba(255,255,255,0.72); border:1px solid var(--line); border-radius:20px; padding:18px; }
-    .stat .num { display:block; font-size:28px; font-weight:700; letter-spacing:-0.03em; }
-    .stat .label { display:block; margin-top:6px; font-size:13px; color:var(--sub); }
-    .empty { margin:0 28px 28px; padding:36px 28px; border-radius:24px; border:1px dashed rgba(0,0,0,0.14); background:linear-gradient(180deg, rgba(255,255,255,0.72), rgba(255,255,255,0.45)); }
-    .empty h3 { margin:0 0 10px; font-size:24px; letter-spacing:-0.02em; }
-    .empty p { margin:0; color:var(--sub); line-height:1.8; font-size:15px; }
-    .source-box { margin: 0 28px 28px; padding:18px 20px; border-radius:20px; background:rgba(255,255,255,0.7); border:1px solid var(--line); }
-    .source-box strong { display:block; margin-bottom:8px; }
+    .tag.new { background: rgba(216,111,91,.12); color: var(--new); }
     .footer { margin-top:26px; text-align:center; color:var(--sub); font-size:13px; }
-    @media (max-width: 900px) {
-      .grid { grid-template-columns:1fr; }
-      .update-item { grid-template-columns:1fr; gap:10px; }
-      .stats { grid-template-columns:1fr; }
-      .hero { padding-top:44px; }
-    }
+    @media (max-width: 900px) { .grid { grid-template-columns:1fr; } .update-item { grid-template-columns:1fr; gap:10px; } .hero { padding-top:44px; } }
   </style>
 </head>
 <body>
   <div class="wrap">
     <section class="hero">
-      <div class="eyebrow">Apple-style Legal Dashboard</div>
-      <h1>每日新法条<br>与备案文件追踪</h1>
-      <p>用于展示全国人大法工委备案审查工作页面中近一个月公开信息，并预留案件展示区。当前已按你的需求加入备案文件更新模块，后续可继续扩展成自动化更新站点。</p>
+      <div class="eyebrow">Legal Dashboard</div>
+      <h1>法律专题</h1>
+      <p>只保留立法情况与近一个月法条两块内容。新增内容按与昨天对比的结果标注“新增”。</p>
     </section>
 
     <section class="grid">
       <div class="card">
         <div class="section-head">
-          <h2 class="section-title">近一个月备案文件</h2>
-          <p class="section-desc">数据来源：全国人大法工委“备案审查工作”页面。按当前抓取结果，近一个月未发现新的公开备案文件条目，以下保留页面中最新可见条目，便于持续跟踪。</p>
+          <h2 class="section-title">立法情况</h2>
+          <p class="section-desc">来源：全国人大网立法专题页。展示前 10 条，仅保留法条名称与日期。</p>
         </div>
         <div class="meta-bar">
-          <span class="pill">检查周期：每天 09:00</span>
-          <span class="pill">来源页面：备案审查工作</span>
-          <span class="pill">最近更新：<!-- BASCGZ_LAST_UPDATED_START -->
-2026-03-21
-          <!-- BASCGZ_LAST_UPDATED_END --></span>
+          <span class="pill">来源：http://www.npc.gov.cn/npc/c1773/c1848/</span>
+          P26-03-22</span>
         </div>
         <div class="updates">
-          <!-- BASCGZ_ITEMS_START -->
-<article class="update-item">
-            <div class="date">2026-03-13</div>
-            <div>
-              <h3>首页</h3>
-              <p>来源栏目：备案审查工作研究</p>
-              <p><a href="http://www.npc.gov.cn/" target="_blank" rel="noopener noreferrer">查看原文</a></p>
-              <span class="tag">备案审查工作研究</span>
-            </div>
-          </article>
-
-          <article class="update-item">
-            <div class="date">2026-03-13</div>
-            <div>
-              <h3>创新同步报告机制 汇聚备案审查合力</h3>
-              <p>来源栏目：备案审查工作研究</p>
-              <p><a href="http://www.npc.gov.cn/c2/c30834/202603/t20260313_453239.html" target="_blank" rel="noopener noreferrer">查看原文</a></p>
-              <span class="tag">备案审查工作研究</span>
-            </div>
-          </article>
-
-          <article class="update-item">
-            <div class="date">2026-03-13</div>
-            <div>
-              <h3>甘肃省庆阳市人大常委会：全覆盖全周期全要素 推动备案审查工作提质增效</h3>
-              <p>来源栏目：备案审查工作研究</p>
-              <p><a href="http://www.npc.gov.cn/c2/c30834/202603/t20260313_453238.html" target="_blank" rel="noopener noreferrer">查看原文</a></p>
-              <span class="tag">备案审查工作研究</span>
-            </div>
-          </article>
-          <!-- BASCGZ_ITEMS_END -->
+          <!-- LAWMAKING_ITEMS_START -->
+<article class="update-item"><div class="date">2026-02-24</div><div><h3>民族团结进步促进法立法</h3><p><a href="http://www.npc.gov.cn/npc/c1773/c1848/c21114/mztjjbcjflf/" target="_blank" rel="noopener noreferrer">查看原文</a></p></div></article>
+<article class="update-item"><div class="date">2026-01-12</div><div><h3>商标法修订</h3><p><a href="http://www.npc.gov.cn/npc/c1773/c1848/c21114/sbfxd/" target="_blank" rel="noopener noreferrer">查看原文</a></p></div></article>
+<article class="update-item"><div class="date">2026-01-07</div><div><h3>国有资产法立法</h3><p><a href="http://www.npc.gov.cn/npc/c1773/c1848/c21114/gyzcflf/" target="_blank" rel="noopener noreferrer">查看原文</a></p></div></article>
+<article class="update-item"><div class="date">2026-01-06</div><div><h3>南极活动与环境保护法立法</h3><p><a href="http://www.npc.gov.cn/npc/c1773/c1848/c21114/njhdyhjbhflf/" target="_blank" rel="noopener noreferrer">查看原文</a></p></div></article>
+<article class="update-item"><div class="date">2026-01-05</div><div><h3>托育服务法立法</h3><p><a href="http://www.npc.gov.cn/npc/c1773/c1848/c21114/tyfwflf/" target="_blank" rel="noopener noreferrer">查看原文</a></p></div></article>
+<article class="update-item"><div class="date">2025-12-30</div><div><h3>对外贸易法修订</h3><p><a href="http://www.npc.gov.cn/npc/c1773/c1848/c21114/dwmyfxd/" target="_blank" rel="noopener noreferrer">查看原文</a></p></div></article>
+<article class="update-item"><div class="date">2025-12-26</div><div><h3>生态环境法典立法</h3><p><a href="http://www.npc.gov.cn/npc/c1773/c1848/c21114/sthjfdlf/" target="_blank" rel="noopener noreferrer">查看原文</a></p></div></article>
+<article class="update-item"><div class="date">2025-11-05</div><div><h3>村民委员会组织法修正</h3><p><a href="http://www.npc.gov.cn/npc/c1773/c1848/c21114/cmwyhzzfxz/" target="_blank" rel="noopener noreferrer">查看原文</a></p></div></article>
+<article class="update-item"><div class="date">2025-11-04</div><div><h3>城市居民委员会组织法修订</h3><p><a href="http://www.npc.gov.cn/npc/c1773/c1848/c21114/csjmwyhzzfxd/" target="_blank" rel="noopener noreferrer">查看原文</a></p></div></article>
+<article class="update-item"><div class="date">2025-09-22</div><div><h3>国家通用语言文字法修订</h3><p><a href="http://www.npc.gov.cn/npc/c1773/c1848/c21114/gjtyyywzfxd/" target="_blank" rel="noopener noreferrer">查看原文</a></p></div></article>
+<!-- LAWMAKING_ITEMS_END -->
         </div>
       </div>
 
-      <div class="card cases-wrap">
+      <div class="card">
         <div class="section-head">
-          <h2 class="section-title">我办过的案件</h2>
-          <p class="section-desc">该区域继续按你的要求留空。等你把案件信息发来后，我可以直接补成案例卡片、时间轴或分类展示版本。</p>
+          <h2 class="section-title">近一个月法条</h2>
+          <p class="section-desc">来源：国家法律法规数据库检索页。公布日期在近一个月的法条有多少展示多少，保留名称、公布日期、施行日期、制定机关，标题可直接点击访问。</p>
         </div>
-        <div class="stats">
-          <div class="stat"><span class="num">—</span><span class="label">案件总数</span></div>
-          <div class="stat"><span class="num">—</span><span class="label">重点领域</span></div>
-          <div class="stat"><span class="num">—</span><span class="label">代表成果</span></div>
+        <div class="meta-bar">
+          <span class="pill">来源：https://flk.npc.gov.cn/search</span>
+          <span class="pill">口径：公布日期近一个月</span>
         </div>
-        <div class="empty">
-          <h3>案件内容待补充</h3>
-          <p>你后续只要提供案件名称、案由、争议焦点、代理思路、结果亮点等，我可以继续保持当前风格直接补到页面里。</p>
-        </div>
-        <div class="source-box">
-          <strong>自动更新说明</strong>
-          页面已预留自动检查机制。后续每天定时访问来源页面，如发现新增条目，可继续自动更新本页或向你发送摘要通知。
+        <div class="updates">
+          <!-- RECENT_LAWS_ITEMS_START -->
+<article class="update-item"><div class="date">2026-03-12</div><div><h3><a href="https://flk.npc.gov.cn/search?keyword=%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E6%B0%91%E6%97%8F%E5%9B%A2%E7%BB%93%E8%BF%9B%E6%AD%A5%E4%BF%83%E8%BF%9B%E6%B3%95" target="_blank" rel="noopener noreferrer">中华人民共和国民族团结进步促进法</a></h3><p>公布日期：2026-03-12 ｜ 施行日期：2026-07-01 ｜ 制定机关：全国人民代表大会</p></div></article>
+<article class="update-item"><div class="date">2026-03-12</div><div><h3><a href="https://flk.npc.gov.cn/search?keyword=%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E5%9B%BD%E5%AE%B6%E5%8F%91%E5%B1%95%E8%A7%84%E5%88%92%E6%B3%95" target="_blank" rel="noopener noreferrer">中华人民共和国国家发展规划法</a></h3><p>公布日期：2026-03-12 ｜ 施行日期：2026-03-12 ｜ 制定机关：全国人民代表大会</p></div></article>
+<article class="update-item"><div class="date">2026-03-12</div><div><h3><a href="https://flk.npc.gov.cn/search?keyword=%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E7%94%9F%E6%80%81%E7%8E%AF%E5%A2%83%E6%B3%95%E5%85%B8" target="_blank" rel="noopener noreferrer">中华人民共和国生态环境法典</a></h3><p>公布日期：2026-03-12 ｜ 施行日期：2026-08-15 ｜ 制定机关：全国人民代表大会</p></div></article>
+<article class="update-item"><div class="date">2026-03-12</div><div><h3><a href="https://flk.npc.gov.cn/search?keyword=%E7%AC%AC%E5%8D%81%E5%9B%9B%E5%B1%8A%E5%85%A8%E5%9B%BD%E4%BA%BA%E6%B0%91%E4%BB%A3%E8%A1%A8%E5%A4%A7%E4%BC%9A%E7%AC%AC%E5%9B%9B%E6%AC%A1%E4%BC%9A%E8%AE%AE%E5%85%B3%E4%BA%8E%E6%89%B9%E5%87%86%E3%80%8A%E5%85%A8%E5%9B%BD%E4%BA%BA%E6%B0%91%E4%BB%A3%E8%A1%A8%E5%A4%A7%E4%BC%9A%E5%B8%B8%E5%8A%A1%E5%A7%94%E5%91%98%E4%BC%9A%E5%85%B3%E4%BA%8E%E6%B3%95%E5%BE%8B%E6%B8%85%E7%90%86%E5%B7%A5%E4%BD%9C%E6%83%85%E5%86%B5%E5%92%8C%E6%9C%89%E5%85%B3%E6%B3%95%E5%BE%8B%E5%92%8C%E5%86%B3%E5%AE%9A%E5%A4%84%E7%90%86%E6%84%8F%E8%A7%81%E7%9A%84%E6%8A%A5%E5%91%8A%E3%80%8B%E7%9A%84%E5%86%B3%E5%AE%9A" target="_blank" rel="noopener noreferrer">第十四届全国人民代表大会第四次会议关于批准《全国人民代表大会常务委员会关于法律清理工作情况和有关法律和决定处理意见的报告》的决定</a></h3><p>公布日期：2026-03-12 ｜ 施行日期：2026-03-12 ｜ 制定机关：全国人民代表大会</p></div></article>
+<article class="update-item"><div class="date">2026-03-12</div><div><h3><a href="https://flk.npc.gov.cn/search?keyword=%E7%A4%BE%E4%BC%9A%E5%9B%A2%E4%BD%93%E7%99%BB%E8%AE%B0%E7%AE%A1%E7%90%86%E6%9D%A1%E4%BE%8B" target="_blank" rel="noopener noreferrer">社会团体登记管理条例</a></h3><p>公布日期：2026-03-12 ｜ 施行日期：2026-03-12 ｜ 制定机关：国务院</p></div></article>
+<article class="update-item"><div class="date">2026-03-12</div><div><h3><a href="https://flk.npc.gov.cn/search?keyword=%E5%9B%BD%E5%8A%A1%E9%99%A2%E5%85%B3%E4%BA%8E%E4%BF%AE%E6%94%B9%E3%80%8A%E7%A4%BE%E4%BC%9A%E5%9B%A2%E4%BD%93%E7%99%BB%E8%AE%B0%E7%AE%A1%E7%90%86%E6%9D%A1%E4%BE%8B%E3%80%8B%E7%9A%84%E5%86%B3%E5%AE%9A" target="_blank" rel="noopener noreferrer">国务院关于修改《社会团体登记管理条例》的决定</a></h3><p>公布日期：2026-03-12 ｜ 施行日期：2026-03-12 ｜ 制定机关：国务院</p></div></article>
+<article class="update-item"><div class="date">2026-02-11</div><div><h3><a href="https://flk.npc.gov.cn/search?keyword=%E4%BE%9B%E6%B0%B4%E6%9D%A1%E4%BE%8B" target="_blank" rel="noopener noreferrer">供水条例</a></h3><p>公布日期：2026-02-11 ｜ 施行日期：2026-06-01 ｜ 制定机关：国务院</p></div></article>
+<article class="update-item"><div class="date">2026-02-09</div><div><h3><a href="https://flk.npc.gov.cn/search?keyword=%E5%AE%89%E5%BE%BD%E7%9C%81%E4%BA%BA%E6%B0%91%E4%BB%A3%E8%A1%A8%E5%A4%A7%E4%BC%9A%E8%AE%AE%E4%BA%8B%E8%A7%84%E5%88%99" target="_blank" rel="noopener noreferrer">安徽省人民代表大会议事规则</a></h3><p>公布日期：2026-02-09 ｜ 施行日期：2026-03-01 ｜ 制定机关：安徽省人民代表大会</p></div></article>
+<article class="update-item"><div class="date">2026-02-06</div><div><h3><a href="https://flk.npc.gov.cn/search?keyword=%E6%B1%9F%E8%8B%8F%E7%9C%81%E6%B0%91%E8%90%A5%E7%BB%8F%E6%B5%8E%E4%BF%83%E8%BF%9B%E6%9D%A1%E4%BE%8B" target="_blank" rel="noopener noreferrer">江苏省民营经济促进条例</a></h3><p>公布日期：2026-02-06 ｜ 施行日期：2026-05-20 ｜ 制定机关：江苏省人民代表大会</p></div></article>
+<article class="update-item"><div class="date">2026-02-06</div><div><h3><a href="https://flk.npc.gov.cn/search?keyword=%E6%B1%9F%E8%8B%8F%E7%9C%81%E5%86%9C%E4%BA%A7%E5%93%81%E8%B4%A8%E9%87%8F%E5%AE%89%E5%85%A8%E6%9D%A1%E4%BE%8B" target="_blank" rel="noopener noreferrer">江苏省农产品质量安全条例</a></h3><p>公布日期：2026-02-06 ｜ 施行日期：2026-05-01 ｜ 制定机关：江苏省人民代表大会</p></div></article>
+<!-- RECENT_LAWS_ITEMS_END -->
         </div>
       </div>
     </section>
 
-    <div class="footer">当前文件：law-site.html ｜ 来源：全国人大法工委备案审查工作页面</div>
+    <div class="footer">法律专题已改为：立法情况 + 近一个月法条</div>
   </div>
 </body>
 </html>
